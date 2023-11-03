@@ -1,0 +1,23 @@
+Source: nectarclient-lib
+Section: unknown
+Priority: optional
+Maintainer: Sam Morrison <sorrison@gmail.com>
+Build-Depends:
+ debhelper (>= 9),
+ python3-all (>=3.2),
+ python3-setuptools,
+ python3-pip,
+ python3-mock,
+ python3-testtools,
+ python3-requests-mock,
+ python3-fixtures,
+ python3-requests,
+ dh-python,
+Standards-Version: 3.9.5
+Homepage: https://github.com/NeCTAR-RC/nectarclient-lib
+
+Package: python3-nectarclient-lib
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}
+Description: Nectar client common lib
+ Nectar client common lib
