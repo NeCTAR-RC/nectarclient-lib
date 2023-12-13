@@ -162,3 +162,7 @@ class FakeManager(base.Manager):
 
 class FakeResource(base.Resource):
     pass
+
+
+class DTResource(base.Resource):
+    date_fields = ['datetime']

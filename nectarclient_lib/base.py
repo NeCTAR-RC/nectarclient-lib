@@ -15,10 +15,16 @@ import abc
 import copy
 from datetime import datetime
 import json
+import logging
 
+from dateutil import tz
 from requests import Response
 
 from nectarclient_lib import exceptions
+
+
+LOCAL_TIMEZONE = tz.gettz()
+LOG = logging.getLogger('__name__')
 
 
 def getid(obj):
@@ -314,7 +320,7 @@ class Resource(RequestIdMixin):
     :param resp: Response or list of Response objects
     """
 
-    DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
+    DATE_FORMATS = ['%Y-%m-%dT%H:%M:%S', '%Y-%m-%dT%H:%M:%S%z', '%Y-%m-%d']
     date_fields = []
 
     def __init__(self, manager, info, loaded=False, resp=None):
@@ -328,12 +334,22 @@ class Resource(RequestIdMixin):
     def _add_details(self, info):
         for (k, v) in info.items():
             if k in self.date_fields:
-                try:
-                    setattr(self, k, datetime.strptime(v, self.DATE_FORMAT))
+                parsed = False
+                for dt_format in self.DATE_FORMATS:
+                    try:
+                        dt = datetime.strptime(v, dt_format)
+                        if dt.tzinfo:
+                            dt = dt.astimezone(LOCAL_TIMEZONE)
+                        setattr(self, k, dt)
+                        self._info[k] = dt
+                        parsed = True
+                        break
+                    except Exception:
+                        # Couldn't pasrse date, fallback to string
+                        continue
+                if parsed:
                     continue
-                except Exception:
-                    # Couldn't pasrse date, fallback to string
-                    pass
+                LOG.warning("Couldn't parse datetime for field %s", k)
             try:
                 setattr(self, k, v)
                 self._info[k] = v

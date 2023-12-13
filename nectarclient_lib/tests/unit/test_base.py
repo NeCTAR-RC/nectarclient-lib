@@ -11,6 +11,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import datetime
+from dateutil import tz
 import requests
 
 from nectarclient_lib import base
@@ -73,6 +75,34 @@ class BaseTest(utils.TestCase):
         resp_obj = create_response_obj_with_compute_header()
         r = base.Resource(None, {"name": "1"}, resp=resp_obj)
         self.assertEqual(fakes.FAKE_REQUEST_ID_LIST, r.request_ids)
+
+    def test_resource_object_with_datetime(self):
+        r = fakes.DTResource(None, {"name": "1",
+                                    "datetime": "2022-08-23T00:00:00"})
+        self.assertEqual(
+            datetime.datetime(2022, 8, 23, 0, 0),
+            r.datetime)
+
+    def test_resource_object_with_date(self):
+        r = fakes.DTResource(None, {"name": "1",
+                                    "datetime": "2022-08-23"})
+        self.assertEqual(
+            datetime.datetime(2022, 8, 23, 0, 0),
+            r.datetime)
+
+    def test_resource_object_with_datetime_with_tz(self):
+        r = fakes.DTResource(None, {"name": "1",
+                                    "datetime": "2022-08-23T00:00:00+00:00"})
+        self.assertEqual(
+            datetime.datetime(2022, 8, 23, 10, 0, tzinfo=tz.gettz()),
+            r.datetime)
+
+    def test_resource_object_with_datetime_unknown_format(self):
+        r = fakes.DTResource(None, {"name": "1",
+                                    "datetime": "2022-08-23 00:00:00+00:00"})
+        self.assertEqual(
+            "2022-08-23 00:00:00+00:00",
+            r.datetime)
 
 
 class ListWithMetaTest(utils.TestCase):
