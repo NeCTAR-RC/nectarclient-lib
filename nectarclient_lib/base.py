@@ -17,7 +17,6 @@ from datetime import datetime
 import json
 
 from requests import Response
-import six
 
 from nectarclient_lib import exceptions
 
@@ -61,7 +60,7 @@ class Manager(object):
         else:
             data = body
 
-        if raw or all([isinstance(res, six.string_types) for res in data]):
+        if raw or all([isinstance(res, str) for res in data]):
             new_items = data
         else:
             new_items = [obj_class(self, res, loaded=True)
@@ -188,7 +187,7 @@ class Manager(object):
         else:
             data = body
 
-        if all([isinstance(res, six.string_types) for res in data]):
+        if all([isinstance(res, str) for res in data]):
             new_items = data
         else:
             new_items = [obj_class(self, res, loaded=True)
@@ -202,12 +201,9 @@ class Manager(object):
         return ListWithMeta(items, resp)
 
     def convert_into_with_meta(self, item, resp):
-        if isinstance(item, six.string_types):
-            if six.PY2 and isinstance(item, six.text_type):
-                return UnicodeWithMeta(item, resp)
-            else:
-                return StrWithMeta(item, resp)
-        elif isinstance(item, six.binary_type):
+        if isinstance(item, str):
+            return StrWithMeta(item, resp)
+        elif isinstance(item, bytes):
             return BytesWithMeta(item, resp)
         elif isinstance(item, list):
             return ListWithMeta(item, resp)
@@ -219,8 +215,7 @@ class Manager(object):
             return DictWithMeta(item, resp)
 
 
-@six.add_metaclass(abc.ABCMeta)
-class ManagerWithFind(Manager):
+class ManagerWithFind(Manager, metaclass=abc.ABCMeta):
     """Manager with additional `find()`/`findall()` methods."""
 
     @abc.abstractmethod
@@ -331,7 +326,7 @@ class Resource(RequestIdMixin):
         self.append_request_ids(resp)
 
     def _add_details(self, info):
-        for (k, v) in six.iteritems(info):
+        for (k, v) in info.items():
             if k in self.date_fields:
                 try:
                     setattr(self, k, datetime.strptime(v, self.DATE_FORMAT))
@@ -437,20 +432,10 @@ class StrWithMeta(str, RequestIdMixin):
         self.append_request_ids(resp)
 
 
-class BytesWithMeta(six.binary_type, RequestIdMixin):
+class BytesWithMeta(bytes, RequestIdMixin):
     def __new__(cls, value, resp):
         return super(BytesWithMeta, cls).__new__(cls, value)
 
     def __init__(self, values, resp):
         self.request_ids_setup()
         self.append_request_ids(resp)
-
-
-if six.PY2:
-    class UnicodeWithMeta(six.text_type, RequestIdMixin):
-        def __new__(cls, value, resp):
-            return super(UnicodeWithMeta, cls).__new__(cls, value)
-
-        def __init__(self, values, resp):
-            self.request_ids_setup()
-            self.append_request_ids(resp)

@@ -12,7 +12,6 @@
 #    under the License.
 
 import requests
-import six
 
 from nectarclient_lib import base
 from nectarclient_lib.tests.unit import fakes
@@ -125,14 +124,3 @@ class BytesWithMetaTest(utils.TestCase):
         # Check request_ids attribute is added to obj
         self.assertTrue(hasattr(obj, 'request_ids'))
         self.assertEqual(fakes.FAKE_REQUEST_ID_LIST, obj.request_ids)
-
-
-if six.PY2:
-    class UnicodeWithMetaTest(utils.TestCase):
-        def test_unicode_with_meta(self):
-            resp = create_response_obj_with_header()
-            obj = base.UnicodeWithMeta(u'test-unicode', resp)
-            self.assertEqual(u'test-unicode', obj)
-            # Check request_ids attribute is added to obj
-            self.assertTrue(hasattr(obj, 'request_ids'))
-            self.assertEqual(fakes.FAKE_REQUEST_ID_LIST, obj.request_ids)
