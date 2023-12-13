@@ -93,9 +93,10 @@ class BaseTest(utils.TestCase):
     def test_resource_object_with_datetime_with_tz(self):
         r = fakes.DTResource(None, {"name": "1",
                                     "datetime": "2022-08-23T00:00:00+00:00"})
-        self.assertEqual(
-            datetime.datetime(2022, 8, 23, 10, 0, tzinfo=tz.gettz()),
-            r.datetime)
+
+        dt = datetime.datetime(2022, 8, 23, 0, 0, tzinfo=tz.UTC)
+        self.assertEqual(dt, r.datetime)
+        self.assertEqual(tz.gettz(), r.datetime.tzinfo)
 
     def test_resource_object_with_datetime_unknown_format(self):
         r = fakes.DTResource(None, {"name": "1",
