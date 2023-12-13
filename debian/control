@@ -12,6 +12,7 @@ Build-Depends:
  python3-requests-mock,
  python3-fixtures,
  python3-requests,
+ python3-dateutil,
  dh-python,
 Standards-Version: 3.9.5
 Homepage: https://github.com/NeCTAR-RC/nectarclient-lib
