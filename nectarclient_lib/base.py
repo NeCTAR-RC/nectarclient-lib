@@ -162,6 +162,7 @@ class Manager(object):
               headers=None):
         if headers is None:
             headers = {}
+        headers["Content-Type"] = "application/json"
         resp, body = self.api.post(url, data=data, headers=headers)
         if return_raw:
             if response_key:
