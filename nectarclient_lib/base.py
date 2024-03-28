@@ -185,6 +185,8 @@ class Manager(object):
             items = []
         if headers is None:
             headers = {}
+        headers["Content-Type"] = "application/json"
+        data = json.dumps(data)
         resp, body = self.api.post(url, headers=headers, data=data)
 
         if obj_class is None:
