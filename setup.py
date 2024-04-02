@@ -19,7 +19,7 @@ from pbr.packaging import parse_requirements
 
 setuptools.setup(
     name='nectarclient-lib',
-    version='1.3.0',
+    version='1.3.1',
     description=('Common lib for nectar clients'),
     author='Sam Morrison',
     author_email='sorrison@gmail.com',

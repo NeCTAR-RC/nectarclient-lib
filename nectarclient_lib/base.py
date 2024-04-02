@@ -337,7 +337,7 @@ class Resource(RequestIdMixin):
 
     def _add_details(self, info):
         for (k, v) in info.items():
-            if k in self.date_fields:
+            if k in self.date_fields and v is not None:
                 parsed = False
                 for dt_format in self.DATE_FORMATS:
                     try:
