@@ -5,6 +5,7 @@ Maintainer: Sam Morrison <sorrison@gmail.com>
 Build-Depends:
  debhelper (>= 9),
  dh-python,
+ openstack-pkg-tools,
  python3-all (>=3.2),
  python3-pbr,
  python3-setuptools,
