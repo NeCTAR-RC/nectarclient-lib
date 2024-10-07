@@ -19,7 +19,6 @@ from nectarclient_lib.tests.unit import utils
 
 
 class ExceptionsTest(utils.TestCase):
-
     def test_from_response_no_body_message(self):
         # Tests that we get ClientException back since we don't have 500 mapped
         response = requests.Response()

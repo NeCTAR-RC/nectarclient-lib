@@ -40,8 +40,9 @@ class BaseTest(utils.TestCase):
     def test_getid(self):
         self.assertEqual(4, base.getid(4))
 
-        class TmpObject(object):
+        class TmpObject:
             id = 4
+
         self.assertEqual(4, base.getid(TmpObject))
 
     def test_eq(self):
@@ -77,33 +78,29 @@ class BaseTest(utils.TestCase):
         self.assertEqual(fakes.FAKE_REQUEST_ID_LIST, r.request_ids)
 
     def test_resource_object_with_datetime(self):
-        r = fakes.DTResource(None, {"name": "1",
-                                    "datetime": "2022-08-23T00:00:00"})
-        self.assertEqual(
-            datetime.datetime(2022, 8, 23, 0, 0),
-            r.datetime)
+        r = fakes.DTResource(
+            None, {"name": "1", "datetime": "2022-08-23T00:00:00"}
+        )
+        self.assertEqual(datetime.datetime(2022, 8, 23, 0, 0), r.datetime)
 
     def test_resource_object_with_date(self):
-        r = fakes.DTResource(None, {"name": "1",
-                                    "datetime": "2022-08-23"})
-        self.assertEqual(
-            datetime.datetime(2022, 8, 23, 0, 0),
-            r.datetime)
+        r = fakes.DTResource(None, {"name": "1", "datetime": "2022-08-23"})
+        self.assertEqual(datetime.datetime(2022, 8, 23, 0, 0), r.datetime)
 
     def test_resource_object_with_datetime_with_tz(self):
-        r = fakes.DTResource(None, {"name": "1",
-                                    "datetime": "2022-08-23T00:00:00+00:00"})
+        r = fakes.DTResource(
+            None, {"name": "1", "datetime": "2022-08-23T00:00:00+00:00"}
+        )
 
         dt = datetime.datetime(2022, 8, 23, 0, 0, tzinfo=tz.UTC)
         self.assertEqual(dt, r.datetime)
         self.assertEqual(tz.gettz(), r.datetime.tzinfo)
 
     def test_resource_object_with_datetime_unknown_format(self):
-        r = fakes.DTResource(None, {"name": "1",
-                                    "datetime": "2022-08-23 00:00:00+00:00"})
-        self.assertEqual(
-            "2022-08-23 00:00:00+00:00",
-            r.datetime)
+        r = fakes.DTResource(
+            None, {"name": "1", "datetime": "2022-08-23 00:00:00+00:00"}
+        )
+        self.assertEqual("2022-08-23 00:00:00+00:00", r.datetime)
 
 
 class ListWithMetaTest(utils.TestCase):
